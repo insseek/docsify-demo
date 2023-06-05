@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>docsify</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="一个神奇的文档网站生成器。">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="icon" href="_media/favicon.icon">
+  <link rel="stylesheet" href="_style/docsify@4-themes-vue.min.css">
+</head>
+
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      name: 'docsify',
+
+      //repo: 'https://github.com/docsifyjs/docsify/',
+
+      //loadSidebar设置为true，不指定目录文件时，默认是_sidebar.md
+      loadSidebar: "SUMMARY.md",
+      subMaxLevel: 3,
+
+      coverpage: true,
+
+      search: {
+        placeholder: '搜索',
+      },
+
+      pagination: {
+        previousText: '上一节',
+        nextText: '下一节',
+        crossChapter: true,
+        crossChapterText: true,
+      },
+      //百度统计ID
+      baiduTjId: "",
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <!-- Docsify文档：https://docsify.js.org/ -->
+  <script src="_script/docsify@4.min.js"></script>
+  <!-- search -->
+  <script src="_script/docsify-search.min.js"></script>
+  <!-- pagination -->
+  <script src="_script/docsify-pagination.min.js"></script>
+  <!-- baidu-tongji -->
+  <script src="_script/docsify-baidu-tj.min.js"></script>
+</body>
+
+</html>
