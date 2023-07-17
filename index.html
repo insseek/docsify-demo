@@ -8,6 +8,7 @@
   <meta name="description" content="一个神奇的文档网站生成器。">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <link rel="icon" href="_media/favicon.ico">
+  <link rel="stylesheet" href="_style/docsify-sidebar-collapse.min.css">
   <link rel="stylesheet" href="_style/docsify@4-themes-vue.min.css">
 </head>
 
@@ -22,6 +23,8 @@
       //loadSidebar设置为true，不指定目录文件时，默认是_sidebar.md
       loadSidebar: "SUMMARY.md",
       subMaxLevel: 3,
+      sidebarDisplayLevel: 0, // set sidebar display level
+
 
       coverpage: true,
 
@@ -46,6 +49,8 @@
   <script src="_script/docsify-search.min.js"></script>
   <!-- pagination -->
   <script src="_script/docsify-pagination.min.js"></script>
+  <!-- docsify-sidebar-collapse -->
+  <script src="_script/docsify-sidebar-collapse.min.js"></script>
   <!-- baidu-tongji -->
   <script src="_script/docsify-baidu-tj.min.js"></script>
 </body>
