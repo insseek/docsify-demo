@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Docsify Demo</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Docsify v5 起步模板：无需构建，用 Markdown 写文档。">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="icon" href="_media/favicon.svg">
+
+  <!-- Docsify v5 核心主题 -->
+  <link rel="stylesheet" href="_style/docsify@5-themes-core.min.css">
+  <!-- 深色模式附加样式：默认跟随系统，可用右下角按钮手动切换 -->
+  <link id="theme-dark" rel="stylesheet" href="_style/docsify@5-themes-core-dark.min.css" media="(prefers-color-scheme: dark)">
+  <!-- 自定义样式（深色模式切换按钮） -->
+  <link rel="stylesheet" href="_style/custom.css">
+
+  <script>
+    // 首屏渲染前恢复上次选择的主题，避免闪烁；没有记录时跟随系统
+    (function () {
+      try {
+        var saved = localStorage.getItem('docsify-theme');
+        if (saved === 'dark' || saved === 'light') {
+          document.getElementById('theme-dark').media = saved === 'dark' ? 'all' : 'not all';
+          document.documentElement.dataset.theme = saved;
+        }
+      } catch (error) {
+        /* localStorage 不可用时忽略 */
+      }
+    })();
+  </script>
+</head>
+
+<body class="loading sidebar-chevron-right">
+  <div id="app"></div>
+
+  <script>
+    window.$docsify = {
+      // 站点名称，显示在侧边栏顶部
+      name: 'Docsify Demo',
+
+      // GitHub 仓库，填写后右上角会出现仓库角标，例如 'your-name/your-repo'
+      // repo: '',
+
+      // 侧边栏：加载同目录的 _sidebar.md；subMaxLevel 控制页面内标题的显示层级
+      loadSidebar: '_sidebar.md',
+      subMaxLevel: 3,
+      maxLevel: 4,
+
+      // 顶部导航：加载 _navbar.md
+      loadNavbar: '_navbar.md',
+
+      // 封面页：true 表示加载 _coverpage.md
+      coverpage: true,
+      // 只显示封面，不在封面下方渲染首页正文
+      onlyCover: false,
+
+      // 访问不存在的页面时加载 _404.md
+      notFoundPage: true,
+
+      // 切换页面后自动回到顶部
+      auto2top: true,
+
+      // 无障碍“跳到主要内容”链接，设为 false 可关闭
+      skipLink: '跳到主要内容',
+
+      // 全文搜索（对应 _script/docsify-search@5.min.js）
+      search: {
+        placeholder: '搜索',
+        paths: 'auto',
+        depth: 2,
+      },
+
+      // 上一节 / 下一节（对应 _script/docsify-pagination@2.10.1.min.js）
+      pagination: {
+        previousText: '上一节',
+        nextText: '下一节',
+        crossChapter: true,
+        crossChapterText: true,
+      },
+    }
+  </script>
+
+  <!-- Docsify v5.0.0 本体（必须最先加载） -->
+  <script src="_script/docsify@5.min.js"></script>
+  <!-- 全文搜索插件 -->
+  <script src="_script/docsify-search@5.min.js"></script>
+  <!-- 分页插件 -->
+  <script src="_script/docsify-pagination@2.10.1.min.js"></script>
+  <!-- 深色模式切换（右下角按钮，双击恢复跟随系统） -->
+  <script src="_script/theme-toggle.js"></script>
+</body>
+
+</html>

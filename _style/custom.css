@@ -1,0 +1,46 @@
+/* ---------------------------------------------------------
+   自定义样式：深色模式切换按钮
+   可按需修改颜色、位置与大小
+   --------------------------------------------------------- */
+
+#theme-toggle {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 55;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--sidebar-border-color, rgba(127, 127, 127, 0.25));
+  border-radius: 50%;
+  background: var(--color-bg, #fff);
+  color: var(--color-text, #333);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+#theme-toggle:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+#theme-toggle:focus-visible {
+  outline: 2px solid var(--theme-color, #0b85d7);
+  outline-offset: 2px;
+}
+
+#theme-toggle svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+@media print {
+  #theme-toggle {
+    display: none;
+  }
+}
