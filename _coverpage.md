@@ -4,7 +4,8 @@
 
 - 纯 Markdown 编写，提交即可发布
 - 内置搜索、分页、封面、侧栏、顶栏、深色模式
+- 右上角「翻译」菜单与右下角按钮，随时切换中英文
 - 资源本地化，不依赖外部 CDN
 
-[快速开始](guide/start.md)
-[Markdown 示例](guide/markdown.md)
+[快速开始](/guide/start.md)
+[Markdown 示例](/guide/markdown.md)

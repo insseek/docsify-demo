@@ -1,25 +1,23 @@
 /**
- * 深色 / 浅色模式切换
+ * Docsify v5 — 深色 / 浅色模式切换
  *
  * - 默认跟随系统（prefers-color-scheme）
  * - 点击按钮切换，并把选择记在 localStorage，刷新后保持
  * - 双击按钮：清除记忆，恢复跟随系统
+ * - 按钮文案跟随 `$docsifyI18n` 的中英文切换（见 `_script/i18n.js`）
  *
- * 原理：核心主题始终加载，深色附加样式通过 <link id="theme-dark"> 的
+ * 原理：核心主题始终加载，深色附加样式通过 `<link id="theme-dark">` 的
  * media 属性控制 —— `all` 表示启用，`not all` 表示禁用。
  */
-(function () {
+(() => {
   'use strict';
 
-  var STORAGE_KEY = 'docsify-theme';
-  var darkSheet = document.getElementById('theme-dark');
-  if (!darkSheet) {
-    return;
-  }
-
-  var media = window.matchMedia('(prefers-color-scheme: dark)');
-
-  var ICONS = {
+  const STORAGE_KEY = 'docsify-theme';
+  const FALLBACK_LABELS = {
+    light: '切换到浅色模式（双击恢复跟随系统）',
+    dark: '切换到深色模式（双击恢复跟随系统）',
+  };
+  const ICONS = {
     light:
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
       'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -33,15 +31,25 @@
       '</svg>',
   };
 
+  const darkSheet = document.getElementById('theme-dark');
+  if (!darkSheet) {
+    return;
+  }
+
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+  const i18n = window.$docsifyI18n;
+
+  /** 读取用户手动选择；未选择或不可用时返回 null。 */
   function readChoice() {
     try {
-      var value = localStorage.getItem(STORAGE_KEY);
+      const value = localStorage.getItem(STORAGE_KEY);
       return value === 'dark' || value === 'light' ? value : null;
     } catch (error) {
       return null;
     }
   }
 
+  /** 写入用户选择；`null` 表示清除记忆、恢复跟随系统。 */
   function writeChoice(value) {
     try {
       if (value) {
@@ -54,52 +62,74 @@
     }
   }
 
-  /** 当前实际生效的主题 */
+  /** 当前实际生效的主题。 */
   function effectiveTheme() {
     return readChoice() || (media.matches ? 'dark' : 'light');
   }
 
-  /** 应用主题：paint 只改变外观，不写入记忆 */
+  /** 应用主题：只改变外观，不写入记忆。 */
   function paint(theme) {
     document.documentElement.dataset.theme = theme;
     darkSheet.media = theme === 'dark' ? 'all' : 'not all';
   }
 
-  var button = document.createElement('button');
-  button.id = 'theme-toggle';
-  button.type = 'button';
-
-  function updateButton() {
-    var isDark = effectiveTheme() === 'dark';
-    var label = isDark ? '切换到浅色模式' : '切换到深色模式';
-    button.innerHTML = isDark ? ICONS.dark : ICONS.light;
-    button.setAttribute('aria-label', label + '（双击恢复跟随系统）');
-    button.setAttribute('aria-pressed', String(isDark));
-    button.title = label + '（双击恢复跟随系统）';
+  /** 文案优先取 i18n 字典，保证与页面语言一致。 */
+  function labelFor(theme) {
+    const translated = i18n
+      ? i18n.t(theme === 'dark' ? 'theme.toggleDark' : 'theme.toggleLight')
+      : null;
+    return translated || FALLBACK_LABELS[theme];
   }
 
-  button.addEventListener('click', function () {
-    var next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+  const button = document.createElement('button');
+  button.id = 'theme-toggle';
+  button.type = 'button';
+  button.className = 'app-control';
+
+  function updateButton() {
+    const isDark = effectiveTheme() === 'dark';
+    // 文案描述「点击后会切换到」的目标主题，图标表示当前主题。
+    const label = labelFor(isDark ? 'light' : 'dark');
+    button.innerHTML = isDark ? ICONS.dark : ICONS.light;
+    button.setAttribute('aria-label', label);
+    button.setAttribute('aria-pressed', String(isDark));
+    button.title = label;
+  }
+
+  button.addEventListener('click', () => {
+    const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
     writeChoice(next);
     paint(next);
     updateButton();
   });
 
-  button.addEventListener('dblclick', function () {
+  button.addEventListener('dblclick', () => {
     writeChoice(null);
     paint(media.matches ? 'dark' : 'light');
     updateButton();
   });
 
-  // 未手动选择时，跟随系统变化
-  media.addEventListener('change', function () {
+  // 未手动选择时，跟随系统变化。
+  media.addEventListener('change', () => {
     if (!readChoice()) {
       paint(media.matches ? 'dark' : 'light');
     }
     updateButton();
   });
 
-  document.body.appendChild(button);
+  // 语言变化后同步按钮的无障碍名称。
+  document.addEventListener('docsify:i18n:change', updateButton);
+
+  // 与 i18n.js 共用右下角控件容器；单独使用时也能创建它，保证样式生效。
+  let controls = document.getElementById('app-controls');
+  if (!controls) {
+    controls = document.createElement('div');
+    controls.id = 'app-controls';
+    controls.className = 'app-controls';
+    document.body.appendChild(controls);
+  }
+  controls.appendChild(button);
+
   paint(effectiveTheme());
   updateButton();
 })();

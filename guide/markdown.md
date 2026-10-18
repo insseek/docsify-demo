@@ -6,13 +6,15 @@ Docsify 使用 Markdown 编写内容，下面列出常用语法，可直接复�
 
 ```markdown
 # 一级标题
+
 ## 二级标题
+
 ### 三级标题
 ```
 
 ## 文本样式
 
-**加粗**、*斜体*、~~删除线~~、`行内代码`，以及 [链接](https://docsify.js.org)。
+**加粗**、_斜体_、~~删除线~~、`行内代码`，以及 [Docsify 官网](https://docsify.js.org)。
 
 ## 列表
 
@@ -34,17 +36,21 @@ Docsify 使用 Markdown 编写内容，下面列出常用语法，可直接复�
 
 ## 表格
 
-| 名称 | 说明 | 默认值 |
-| --- | --- | :---: |
+| 名称          | 说明       | 默认值  |
+| ------------- | ---------- | :-----: |
 | `loadSidebar` | 侧边栏文件 | `false` |
-| `coverpage` | 封面页 | `false` |
+| `coverpage`   | 封面页     | `false` |
 
 ## 引用与提示框
 
 > 这是一段引用。
 
+下面是 GitHub 风格的提示框：
+
 > [!NOTE]
 > 这是一条提示（NOTE callout）。
+
+再来看一条 TIP 提示：
 
 > [!TIP]
 > 这是 TIP 提示框，v5 支持 GitHub 风格 callout。
@@ -55,7 +61,7 @@ Docsify 使用 Markdown 编写内容，下面列出常用语法，可直接复�
 window.$docsify = {
   name: 'My Docs',
   loadSidebar: true,
-}
+};
 ```
 
 ```bash

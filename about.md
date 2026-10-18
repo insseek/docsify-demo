@@ -8,4 +8,4 @@
 
 - 把 `index.html` 中的 `name` 改成你的站点名
 - 修改本页内容，或在 `_sidebar.md` 中删掉对应条目
-- 如需项目仓库角标，在 `index.html` 中设置 `repo: '用户名/仓库名'`
+- 右上角仓库角标已指向 <https://github.com/insseek/docsify-demo>，修改 `index.html` 中的 `repo`（完整 URL）即可换成自己的仓库
