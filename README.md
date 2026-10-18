@@ -5,7 +5,7 @@
 ## 这是什么
 
 - **Docsify 5.0.0**：运行时把 Markdown 渲染成网站，不需要生成静态 HTML。
-- **中英文切换**：中文在根目录，英文在 `en/`；右上角「翻译」下拉菜单和右下角语言按钮都能切换，并停留在当前页面。
+- **中英文切换**：中文在根目录，英文在 `en/`；右上角「翻译」原生下拉菜单和右下角语言按钮都能切换到另一种语言的首页。
 - **核心主题**：官方 v5 核心主题。深色模式默认跟随系统，右下角按钮可手动切换并记住选择。
 - **常用能力已接好**：封面页、侧边栏、顶部导航、全文搜索、上一节 / 下一节、404 页面。
 - **微信二维码**：右下角二维码按钮，悬停 / 聚焦 / 点击展示「里探」公众号卡片，可在 `wechat` 配置中关闭。
@@ -40,13 +40,13 @@ docsify-demo/
 │   ├── docsify-search@5.min.js     # 全文搜索插件
 │   ├── docsify-pagination@2.10.1.min.js  # 上一节/下一节插件
 │   ├── donate.js                   # 捐赠二维码渲染
-│   ├── i18n.js                     # 中英文切换
+│   ├── language-toggle.js          # 中英文切换（仅切换路由）
 │   ├── theme-toggle.js             # 深色模式切换
 │   └── wechat.js                   # 微信二维码
 ├── _style/
 │   ├── docsify@5-themes-core.min.css      # 核心主题
 │   ├── docsify@5-themes-core-dark.min.css # 深色模式附加样式
-│   └── custom.css                  # 悬浮按钮、导航下拉菜单与二维码卡片样式
+│   └── custom.css                  # 悬浮按钮、二维码与捐赠卡片样式
 ├── guide/
 │   ├── start.md               # 配置说明
 │   └── markdown.md            # Markdown 语法示例
@@ -99,28 +99,27 @@ python3 -m http.server 3000
 
 ## 中英文切换
 
-两个入口，都会停留在当前页面：
+两个入口：
 
-- **顶部导航 → 翻译**：鼠标悬停、键盘聚焦或点击展开，选择「简体中文」或「English」。
-- **右下角语言按钮**：圈内显示当前语言「中 / EN」，点击切换到另一种语言，与主题按钮显示当前状态的逻辑一致。按钮位于主题按钮上方，二者共用 `.app-control` 样式。
+- **顶部导航 → 翻译**：Docsify 原生悬停下拉，选择「简体中文」或「English」。
+- **右下角语言按钮**：显示当前语言「中 / EN」，点击在 `/` 与 `/en/` 之间切换；按钮位于主题按钮上方，二者共用 `.app-control` 样式。
 
 实现方式：
 
-- 中文页面放在站点根目录，英文页面放在 `/en/`，即 Docsify 官方推荐的语言目录方案；
+- 中文在站点根目录，英文在 `en/`；
 - `index.html` 中的 `alias` 让深层页面复用所属语言的 `_navbar.md` / `_sidebar.md`，减少逐层回退的 404 请求；
 - `fallbackLanguages: ['en']` 让缺失的英文页面回退到中文同名页面；
 - 界面文案通过「路径 → 文案」配置本地化：`search.placeholder`、`search.noData`、`pagination.*`、`skipLink`、`coverpage`、`notFoundPage`、`nameLink`；
-- `_script/i18n.js` 负责同步 `<html lang>`、改写下拉菜单链接以保留当前页面、增强下拉菜单的键盘操作，并暴露 `window.$docsifyI18n`；
-- 搜索插件内置的「找到 N 条结果」、清除按钮与快捷键提示也由 `i18n.js` 本地化；
-- 小屏幕（≤ 640px）顶部只保留「翻译」菜单，页面导航交给左侧侧边栏，避免与 GitHub 角标拥挤。
+- `_script/language-toggle.js` 只负责按钮、路由切换和 `<html lang>`，不保留当前页面路径；
+- 小屏幕（≤ 640px）顶部只保留最后一个「翻译」菜单，页面导航交给左侧侧边栏。
 
-新增语言：复制 `en/` 为 `ja/` 并翻译内容，再在 `index.html` 相同配置中补充 `/ja/` 条目，最后在两个导航文件的语言菜单里加入对应链接。
+新增更多语言：复制 `en/` 并补齐 `/xx/` 配置即可；当前语言按钮只在中英两态之间切换，更多语言需要自行调整按钮逻辑。
 
 ## 深色模式
 
 默认跟随系统设置；点击页面右下角的圆形按钮可手动切换，选择会保存在浏览器中（`localStorage`，键名 `docsify-theme`），刷新后保持。**双击按钮**可清除记忆，恢复「跟随系统」。
 
-实现方式：核心主题常驻加载，深色附加样式通过 `<link id="theme-dark">` 的 `media` 属性启停（`all` 启用、`not all` 禁用），`_script/theme-toggle.js` 负责按钮状态与记忆，并通过 `window.$docsifyI18n` 同步按钮文案。
+实现方式：核心主题常驻加载，深色附加样式通过 `<link id="theme-dark">` 的 `media` 属性启停（`all` 启用、`not all` 禁用），`_script/theme-toggle.js` 负责按钮状态与记忆。
 
 ## 微信二维码
 
@@ -183,20 +182,20 @@ donate: {
 
 ## 常见定制
 
-| 需求            | 做法                                                                                                                  |
-| --------------- | --------------------------------------------------------------------------------------------------------------------- |
-| 换主题色        | 在 `index.html` 的 `<head>` 内加 `<style>:root{--theme-color:#e11d48;}</style>`                                       |
-| 换字体          | 设置 `--font-family`、`--font-family-mono` 主题变量                                                                   |
-| 深色模式        | 右下角按钮切换；双击按钮恢复「跟随系统」                                                                              |
-| 仓库入口        | 修改 `index.html` 中的 `repo`（完整 URL；留空隐藏角标）                                                               |
-| 新增语言        | 复制 `en/` 并翻译，再在 `index.html` 中补充对应路径的配置                                                             |
-| 关闭语言切换    | 删除 `_script/i18n.js` 的 `<script>`、`_navbar.md` 中的「翻译」菜单，以及 `custom.css` 中与 `nav-dropdown` 相关的样式 |
-| 关闭深色模式    | 删除深色样式 `<link>`、`_script/theme-toggle.js` 的 `<script>` 和 `_style/custom.css` 中的按钮样式                    |
-| 关闭微信二维码  | 将 `index.html` 中 `wechat.enabled` 设为 `false`，或删除 `_script/wechat.js` 的 `<script>`                            |
-| 修改捐赠入口    | 编辑 `donate.md` / `en/donate.md` 与 `_media/*-donate*` 图片；通过 `index.html` 的 `donate` 配置开关方式              |
-| 恢复 v4 观感    | 加载官方 Vue 附加主题 `dist/themes/addons/vue.min.css`（需自行下载到 `_style/`）                                      |
-| 关闭搜索 / 分页 | 删除 `index.html` 中对应的 `<script>`，以及 `$docsify` 里的配置项                                                     |
-| 使用 CDN        | 把 `_script/`、`_style/` 的引用换成 `https://cdn.jsdelivr.net/npm/docsify@5/...`                                      |
+| 需求            | 做法                                                                                                                    |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| 换主题色        | 在 `index.html` 的 `<head>` 内加 `<style>:root{--theme-color:#e11d48;}</style>`                                         |
+| 换字体          | 设置 `--font-family`、`--font-family-mono` 主题变量                                                                     |
+| 深色模式        | 右下角按钮切换；双击按钮恢复「跟随系统」                                                                                |
+| 仓库入口        | 修改 `index.html` 中的 `repo`（完整 URL；留空隐藏角标）                                                                 |
+| 新增语言        | 复制 `en/` 并翻译，再在 `index.html` 中补充对应路径的配置                                                               |
+| 关闭语言切换    | 删除 `_script/language-toggle.js` 的 `<script>`、`en/`、`_navbar.md` 中的「翻译」菜单，以及 `index.html` 的 `/en/` 配置 |
+| 关闭深色模式    | 删除深色样式 `<link>`、`_script/theme-toggle.js` 的 `<script>` 和 `_style/custom.css` 中的按钮样式                      |
+| 关闭微信二维码  | 将 `index.html` 中 `wechat.enabled` 设为 `false`，或删除 `_script/wechat.js` 的 `<script>`                              |
+| 修改捐赠入口    | 编辑 `donate.md` / `en/donate.md` 与 `_media/*-donate*` 图片；通过 `index.html` 的 `donate` 配置开关方式                |
+| 恢复 v4 观感    | 加载官方 Vue 附加主题 `dist/themes/addons/vue.min.css`（需自行下载到 `_style/`）                                        |
+| 关闭搜索 / 分页 | 删除 `index.html` 中对应的 `<script>`，以及 `$docsify` 里的配置项                                                       |
+| 使用 CDN        | 把 `_script/`、`_style/` 的引用换成 `https://cdn.jsdelivr.net/npm/docsify@5/...`                                        |
 
 ## 代码与文档规范
 

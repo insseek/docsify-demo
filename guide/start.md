@@ -26,7 +26,7 @@ window.$docsify = {
 - `skipLink`：无障碍「跳到主要内容」链接，支持按路径配置，`false` 可关闭。
 - `cornerExternalLinkTarget`：GitHub 角标的打开方式，默认 `_blank`。
 
-同时别忘了修改 `<head>` 里的 `<title>` 和 `<meta name="description">`。`<html lang>` 由 `_script/i18n.js` 根据当前路由自动更新。
+同时别忘了修改 `<head>` 里的 `<title>` 和 `<meta name="description">`。`<html lang>` 由 `_script/language-toggle.js` 根据当前路由更新。
 
 ## 页面与导航
 
@@ -66,10 +66,9 @@ window.$docsify = {
 ```
 
 - Docsify 原生支持悬停（`:hover`）与键盘聚焦（`:focus-within`）展开二级菜单。
-- 本模板的 `_script/i18n.js` 会把下拉标题升级为 `<button>`，同步 `aria-expanded`，并高亮当前语言。
-- 下拉菜单里的语言链接会被改写成「当前页面 + 目标语言」的地址，切换语言时不会跳回首页；`href` 同步更新，因此新标签页打开、右键复制链接也正确。
+- 下拉里的语言链接直接指向语言首页，不保留当前页面路径。
 - 其他二级菜单同理，可以按需增加多项。
-- 小屏幕（≤ 640px）下顶部导航只保留该下拉菜单，页面链接由左侧侧边栏承担，避免与右上角 GitHub 角标拥挤。
+- 小屏幕（≤ 640px）下顶部导航只保留最后一个语言菜单，页面链接由左侧侧边栏承担，避免与右上角 GitHub 角标拥挤。
 
 ## 多语言（中文 / English）
 
@@ -134,22 +133,16 @@ pagination: {
 > [!IMPORTANT]
 > 对象的 key 顺序有意义：`/en/` 要写在 `/` 之前，否则英文页面会先匹配到中文文案。
 
-主题按钮等由脚本生成的文案放在 `_script/i18n.js` 的 `MESSAGES` 中。搜索插件硬编码的「找到 N 条结果」、清除按钮与快捷键提示，也由该脚本统一本地化。
-
 ### 切换入口
 
-- **右下角语言按钮**：由 `_script/i18n.js` 创建，圈内显示当前语言「中 / EN」（与主题按钮显示当前状态一致），点击后切换到另一种语言并停留在当前页面；与主题按钮共用 `.app-control` 样式。
-- **顶部导航「翻译」菜单**：在 `_navbar.md` 中声明，悬停或聚焦即可展开。
-- 语言状态完全由 URL 决定，不写入 `localStorage`，因此任何页面链接都可以直接分享。
-- `_script/i18n.js` 暴露 `window.$docsifyI18n`（`language`、`t()`、`pathForLanguage()`、`switchTo()`），主题按钮通过它读取当前语言文案。
+- **右下角语言按钮**：由 `_script/language-toggle.js` 创建，显示当前语言「中 / EN」，点击在 `/` 与 `/en/` 之间切换；与主题按钮共用 `.app-control` 样式。
+- **顶部导航「翻译」菜单**：在 `_navbar.md` 中声明，使用 Docsify 原生悬停 / 聚焦下拉。
+- 语言状态完全由 URL 决定，不写入 `localStorage`。
+- 按钮只做路由切换，不保留当前页面路径。
 
 ### 新增第三种语言
 
-1. 复制 `en/` 为 `ja/`，翻译其中的内容；
-2. 在 `alias` 中为 `/ja/` 添加同样的两条规则；
-3. 在 `coverpage`、`notFoundPage`、`search.placeholder`、`search.noData`、`pagination`、`skipLink`、`nameLink` 中补充 `/ja/`；
-4. 在 `_script/i18n.js` 的 `LANGUAGES` 与 `MESSAGES` 中注册语言；
-5. 在 `_navbar.md` 和 `en/_navbar.md` 的语言菜单里加入 `日本語` 链接。
+当前按钮只在中英之间切换。新增语言需要复制 `en/` 为 `ja/`，补齐 `/ja/` 配置和导航菜单，并自行调整 `_script/language-toggle.js` 的切换逻辑。
 
 ## 全文搜索
 
@@ -274,4 +267,4 @@ donate: {
 - 搜索插件：`dist/plugins/search.min.js`
 - 主题：`dist/themes/core.min.css`、`dist/themes/addons/core-dark.min.css`
 
-`_script/i18n.js` 与 `_script/theme-toggle.js` 是本模板自带的增强脚本，升级 Docsify 时无需替换。升级官方文件时，从 [docsify](https://www.npmjs.com/package/docsify) 的对应版本下载并覆盖即可。
+`_script/language-toggle.js`、`_script/theme-toggle.js`、`_script/wechat.js`、`_script/donate.js` 是本模板自带的脚本，升级 Docsify 时无需替换。升级官方文件时，从 [docsify](https://www.npmjs.com/package/docsify) 的对应版本下载并覆盖即可。

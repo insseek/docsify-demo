@@ -5,7 +5,7 @@
 ## What is this
 
 - **Docsify 5.0.0** renders Markdown into a website at runtime; there is no static HTML generation step.
-- **Bilingual by design**: Chinese lives at the site root, English under `en/`. Switch from the _Translations_ menu in the navbar or the language button in the bottom-right corner — the current page is preserved.
+- **Bilingual by design**: Chinese lives at the site root, English under `en/`. Switch from the _Translations_ menu in the navbar or the language button in the bottom-right corner; both go to the selected language’s home page.
 - **Core theme**: the official v5 core theme. Dark mode follows the system by default and can be toggled manually; your choice is remembered.
 - **Batteries included**: cover page, sidebar, navbar, full-text search, previous / next pagination, and a localized 404 page.
 - **WeChat QR code**: a bottom-right QR button opens a card for the 「里探」 official account on hover, focus, or click; disable it via the `wechat` config.
@@ -40,7 +40,7 @@ docsify-demo/
 │   ├── docsify-search@5.min.js     # Full-text search plugin
 │   ├── docsify-pagination@2.10.1.min.js  # Previous / next plugin
 │   ├── donate.js                   # Donation QR rendering
-│   ├── i18n.js                     # Chinese / English switching
+│   ├── language-toggle.js          # Chinese / English route toggle
 │   ├── theme-toggle.js             # Dark mode toggle
 │   └── wechat.js                   # WeChat QR code
 ├── _style/
@@ -99,28 +99,27 @@ See the [configuration guide](/en/guide/start.md) for every option, and the [Mar
 
 ## Chinese / English switching
 
-Two entry points, both keeping you on the current page:
+Two entry points:
 
-- **Navbar → Translations**: hover, focus, or activate the menu, then pick 简体中文 or English.
-- **Bottom-right language button**: shows the current language (`中` / `EN`) and toggles to the other one — the same “show current state” logic as the theme button.
+- **Navbar → Translations**: Docsify’s native hover/focus dropdown; select 简体中文 or English.
+- **Bottom-right language button**: shows the current language (`中` / `EN`) and switches between `/` and `/en/`; it shares the `.app-control` style with the theme button.
 
 How it works:
 
-- Chinese pages live at the site root, English pages under `/en/` — the route-directory approach recommended by the official docsify documentation.
+- Chinese pages live at the site root, English pages under `/en/`.
 - `alias` in `index.html` lets deep pages reuse the `_navbar.md` / `_sidebar.md` of their language, avoiding redundant fallback requests.
-- `fallbackLanguages: ['en']` makes a missing English page fall back to the Chinese version instead of a 404.
+- `fallbackLanguages: ['en']` makes a missing English page fall back to the Chinese version.
 - Interface strings are localized with path-keyed config values: `search.placeholder`, `search.noData`, `pagination.*`, `skipLink`, `coverpage`, `notFoundPage`, and `nameLink`.
-- `_script/i18n.js` updates `<html lang>`, rewrites dropdown links to preserve the current page, enhances the dropdown for keyboard users, and exposes `window.$docsifyI18n`.
-- The search plugin's “Found N results”, clear button, and keyboard shortcut hints are localized by `i18n.js` as well.
-- On small screens (≤ 640px) the top bar keeps only the Translations menu; page navigation stays in the sidebar, avoiding a collision with the GitHub corner.
+- `_script/language-toggle.js` only handles the button, route switching, and `<html lang>`; it does not preserve the current page path.
+- On small screens (≤ 640px) the top bar keeps only the last Translations menu; page navigation stays in the sidebar.
 
-To add another language, copy `en/` to e.g. `ja/`, translate the content, then add `/ja/` entries to the same config keys and add a menu item to both navbars.
+To add more languages, copy `en/` and add the corresponding `/xx/` config; the current button only toggles between Chinese and English, so more languages require adjusting the button logic.
 
 ## Dark mode
 
 Dark mode follows the operating system by default. The circular button in the bottom-right corner toggles it manually, and the choice is stored in `localStorage` (key `docsify-theme`) so it survives a refresh. **Double-click** the button to forget the choice and follow the system again.
 
-The core theme is always loaded; the dark add-on is enabled or disabled through the `media` attribute on `<link id="theme-dark">` (`all` enables it, `not all` disables it). `_script/theme-toggle.js` owns the button state and persistence, and localizes its accessible label via `window.$docsifyI18n`.
+The core theme is always loaded; the dark add-on is enabled or disabled through the `media` attribute on `<link id="theme-dark">` (`all` enables it, `not all` disables it). `_script/theme-toggle.js` owns the button state and persistence.
 
 ## WeChat QR code
 
@@ -183,19 +182,19 @@ This is a fully static site: publish the whole directory to any static host.
 
 ## Common customizations
 
-| Goal                        | How                                                                                                                 |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Change the theme color      | Add `<style>:root{--theme-color:#e11d48;}</style>` inside `<head>` in `index.html`                                  |
-| Change fonts                | Set the `--font-family` and `--font-family-mono` theme variables                                                    |
-| Dark mode                   | Bottom-right button; double-click it to follow the system again                                                     |
-| Repository entry            | Update `repo` in `index.html` (full URL; empty hides the corner)                                                    |
-| Add a language              | Copy `en/`, translate it, and add the matching path keys in `index.html`                                            |
-| Disable language switching  | Remove the `_script/i18n.js` `<script>`, the Translations menu entry, and the `nav-dropdown` styles in `custom.css` |
-| Disable dark mode           | Remove the dark stylesheet `<link>`, `_script/theme-toggle.js`, and `_style/custom.css`                             |
-| Disable the WeChat QR code  | Set `wechat.enabled` to `false` in `index.html`, or remove `_script/wechat.js`                                      |
-| Restore the v4 look         | Load the official Vue add-on theme `dist/themes/addons/vue.min.css` (download it to `_style/`)                      |
-| Disable search / pagination | Remove the corresponding `<script>` and the matching `$docsify` option                                              |
-| Use a CDN                   | Replace the `_script/` / `_style/` references with `https://cdn.jsdelivr.net/npm/docsify@5/...`                     |
+| Goal                        | How                                                                                                                           |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Change the theme color      | Add `<style>:root{--theme-color:#e11d48;}</style>` inside `<head>` in `index.html`                                            |
+| Change fonts                | Set the `--font-family` and `--font-family-mono` theme variables                                                              |
+| Dark mode                   | Bottom-right button; double-click it to follow the system again                                                               |
+| Repository entry            | Update `repo` in `index.html` (full URL; empty hides the corner)                                                              |
+| Add a language              | Copy `en/`, translate it, and add the matching path keys in `index.html`                                                      |
+| Disable language switching  | Remove the `_script/language-toggle.js` `<script>`, `en/`, the Translations menu entry, and the `/en/` config in `index.html` |
+| Disable dark mode           | Remove the dark stylesheet `<link>`, `_script/theme-toggle.js`, and `_style/custom.css`                                       |
+| Disable the WeChat QR code  | Set `wechat.enabled` to `false` in `index.html`, or remove `_script/wechat.js`                                                |
+| Restore the v4 look         | Load the official Vue add-on theme `dist/themes/addons/vue.min.css` (download it to `_style/`)                                |
+| Disable search / pagination | Remove the corresponding `<script>` and the matching `$docsify` option                                                        |
+| Use a CDN                   | Replace the `_script/` / `_style/` references with `https://cdn.jsdelivr.net/npm/docsify@5/...`                               |
 
 ## Code and documentation conventions
 

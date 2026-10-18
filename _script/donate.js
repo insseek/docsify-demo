@@ -37,12 +37,8 @@
     { key: 'alipay', fallbackQrcode: '_media/alipay-donate.jpg' },
   ];
 
-  /** 当前语言；优先复用 i18n 的判断。 */
+  /** 当前语言：按 /en/ 前缀判断。 */
   function currentLanguage() {
-    const i18n = window.$docsifyI18n;
-    if (i18n) {
-      return i18n.language;
-    }
     return /^\/en(\/|$)/.test(window.location.hash.replace(/^#/, ''))
       ? 'en'
       : 'zh';
@@ -130,6 +126,4 @@
       hook.doneEach(() => render());
     },
   ]);
-
-  document.addEventListener('docsify:i18n:change', render);
 })();

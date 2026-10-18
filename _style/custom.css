@@ -72,73 +72,7 @@
   order: 2;
 }
 
-/* 2. Navbar dropdown
-   --------------------------------------------------------------------------- */
-
-/* Docsify 会把「- 标题 + 嵌套列表」渲染为可悬停展开的二级菜单。
-   这里把纯文本标题升级为按钮，并为触屏和键盘补上焦点样式。 */
-.app-nav .nav-dropdown-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35em;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  line-height: inherit;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.app-nav .nav-dropdown-toggle::after {
-  content: '';
-  width: 0.4em;
-  height: 0.4em;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: translateY(-0.15em) rotate(45deg);
-  transition: transform 0.15s ease;
-}
-
-.app-nav .nav-dropdown:hover .nav-dropdown-toggle::after,
-.app-nav .nav-dropdown:focus-within .nav-dropdown-toggle::after,
-.app-nav .nav-dropdown.is-open .nav-dropdown-toggle::after {
-  transform: translateY(0.15em) rotate(225deg);
-}
-
-.app-nav .nav-dropdown-toggle:hover {
-  color: var(--navbar-link-color-active, var(--theme-color, #0b85d7));
-  /* 覆盖核心主题给 button[type]:hover 加的整块描边，让下拉标题与普通链接一致 */
-  outline: 0;
-}
-
-.app-nav .nav-dropdown-toggle:focus-visible {
-  outline: 2px solid var(--theme-color, #0b85d7);
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-/* 点击 / 键盘展开时，复用核心主题的下拉位置 */
-.app-nav .nav-dropdown.is-open > ul {
-  top: 100%;
-}
-
-/* 有 GitHub 角标时，最右侧下拉菜单收回到角标左侧，避免与角标重叠 */
-.app-nav:has(~ .github-corner) .nav-dropdown:last-child > ul {
-  right: 0;
-  translate: 0;
-}
-
-/* 当前语言高亮，配合 i18n.js 写入的 aria-current */
-:is(.app-nav, .app-nav-merged) .nav-dropdown li.active > a,
-:is(.app-nav, .app-nav-merged) .nav-dropdown li > a[aria-current='page'] {
-  color: var(--navbar-link-color-active, var(--theme-color, #0b85d7));
-  font-weight: 600;
-}
-
-/* 3. WeChat QR control
+/* 2. WeChat QR control
    --------------------------------------------------------------------------- */
 
 .wechat-control {
@@ -206,7 +140,7 @@
   text-wrap: balance;
 }
 
-/* 4. Donation page
+/* 3. Donation page
    --------------------------------------------------------------------------- */
 
 .donate-options {
@@ -249,7 +183,7 @@
   color: var(--color-mono-6, var(--color-text, #333));
 }
 
-/* 5. Responsive & print
+/* 4. Responsive & print
    --------------------------------------------------------------------------- */
 
 @media screen and (max-width: 640px) {
@@ -259,9 +193,9 @@
     gap: 0.5rem;
   }
 
-  /* 小屏幕只保留语言下拉菜单；页面导航由左侧侧边栏承担，
-     避免与 GitHub 角标挤在一起。仅在语言菜单存在时生效。 */
-  .app-nav:has(.nav-dropdown) > ul > li:not(.nav-dropdown) {
+  /* 小屏幕只保留最后一个语言菜单；页面导航由左侧侧边栏承担，
+     避免与 GitHub 角标挤在一起。 */
+  .app-nav > ul > li:not(:last-child) {
     display: none;
   }
 
@@ -284,7 +218,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   #app-controls .app-control,
-  .app-nav .nav-dropdown-toggle::after,
   .wechat-panel {
     transition: none;
   }

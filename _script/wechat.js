@@ -52,22 +52,14 @@
     '<path d="M12 21v-1"></path>' +
     '</svg>';
 
-  /** 当前路由路径；优先复用 i18n 的计算结果。 */
+  /** 当前路由路径。 */
   function currentPath() {
-    const i18n = window.$docsifyI18n;
-    if (i18n && typeof i18n.path === 'string') {
-      return i18n.path;
-    }
     const hash = window.location.hash.replace(/^#/, '');
     return hash.split('?')[0] || '/';
   }
 
-  /** 当前语言；i18n 未加载时按 /en/ 前缀判断。 */
+  /** 当前语言：按 /en/ 前缀判断。 */
   function currentLanguage() {
-    const i18n = window.$docsifyI18n;
-    if (i18n) {
-      return i18n.language;
-    }
     return /^\/en(\/|$)/.test(currentPath()) ? 'en' : 'zh';
   }
 
@@ -189,13 +181,6 @@
       pinned = false;
       setOpen(false);
     }
-  });
-
-  // 语言或路由变化后刷新文案，并收起卡片。
-  document.addEventListener('docsify:i18n:change', () => {
-    update();
-    pinned = false;
-    setOpen(false);
   });
 
   const docsify = (window.$docsify = window.$docsify || {});

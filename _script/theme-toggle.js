@@ -1,10 +1,9 @@
 /**
- * Docsify v5 — 深色 / 浅色模式切换
+ * Docsify Starter — 深色 / 浅色模式切换
  *
  * - 默认跟随系统（prefers-color-scheme）
  * - 点击按钮切换，并把选择记在 localStorage，刷新后保持
  * - 双击按钮：清除记忆，恢复跟随系统
- * - 按钮文案跟随 `$docsifyI18n` 的中英文切换（见 `_script/i18n.js`）
  *
  * 原理：核心主题始终加载，深色附加样式通过 `<link id="theme-dark">` 的
  * media 属性控制 —— `all` 表示启用，`not all` 表示禁用。
@@ -13,7 +12,7 @@
   'use strict';
 
   const STORAGE_KEY = 'docsify-theme';
-  const FALLBACK_LABELS = {
+  const LABELS = {
     light: '切换到浅色模式（双击恢复跟随系统）',
     dark: '切换到深色模式（双击恢复跟随系统）',
   };
@@ -37,7 +36,6 @@
   }
 
   const media = window.matchMedia('(prefers-color-scheme: dark)');
-  const i18n = window.$docsifyI18n;
 
   /** 读取用户手动选择；未选择或不可用时返回 null。 */
   function readChoice() {
@@ -73,14 +71,6 @@
     darkSheet.media = theme === 'dark' ? 'all' : 'not all';
   }
 
-  /** 文案优先取 i18n 字典，保证与页面语言一致。 */
-  function labelFor(theme) {
-    const translated = i18n
-      ? i18n.t(theme === 'dark' ? 'theme.toggleDark' : 'theme.toggleLight')
-      : null;
-    return translated || FALLBACK_LABELS[theme];
-  }
-
   const button = document.createElement('button');
   button.id = 'theme-toggle';
   button.type = 'button';
@@ -88,8 +78,7 @@
 
   function updateButton() {
     const isDark = effectiveTheme() === 'dark';
-    // 文案描述「点击后会切换到」的目标主题，图标表示当前主题。
-    const label = labelFor(isDark ? 'light' : 'dark');
+    const label = LABELS[isDark ? 'light' : 'dark'];
     button.innerHTML = isDark ? ICONS.dark : ICONS.light;
     button.setAttribute('aria-label', label);
     button.setAttribute('aria-pressed', String(isDark));
@@ -117,10 +106,7 @@
     updateButton();
   });
 
-  // 语言变化后同步按钮的无障碍名称。
-  document.addEventListener('docsify:i18n:change', updateButton);
-
-  // 与 i18n.js 共用右下角控件容器；单独使用时也能创建它，保证样式生效。
+  // 与页面中的悬浮控件容器共用位置；单独使用时也能创建它。
   let controls = document.getElementById('app-controls');
   if (!controls) {
     controls = document.createElement('div');
